@@ -12,6 +12,7 @@ import { Badge } from '../components/ui/Badge';
 import { ErrorState } from '../components/ui/ErrorState';
 import { PreviewSkeleton } from '../components/ui/Skeleton';
 import type { PlaceholderDef } from '../types/template.types';
+import { isNumericField, withNumericSuffix } from '../utils/numberFormat';
 import { Download, Clock, Pencil } from 'lucide-react';
 
 function sameFieldValues(
@@ -125,13 +126,33 @@ export const DocumentEditorPage: React.FC = () => {
     }));
   };
 
+  const editorPlaceholders: PlaceholderDef[] = document.template?.placeholders?.length
+    ? document.template.placeholders
+    : Object.keys(fieldValues).map((key) => ({
+        key,
+        label: key,
+        type: 'text',
+        required: false,
+      }));
+
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setActionError(null);
+
+    const normalizedFieldValues = Object.fromEntries(
+      Object.entries(fieldValues).map(([key, value]) => {
+        const field = editorPlaceholders.find((item) => item.key === key);
+        return [
+          key,
+          field && isNumericField(field) ? withNumericSuffix(value, field) : value,
+        ];
+      }),
+    );
+
     try {
       await updateMutation.mutateAsync({
         title: title.trim() || document.title,
-        fieldValues,
+        fieldValues: normalizedFieldValues,
       });
       setSavedSuccess(true);
       window.setTimeout(() => setSavedSuccess(false), 2500);
@@ -177,15 +198,6 @@ export const DocumentEditorPage: React.FC = () => {
     hour: '2-digit',
     minute: '2-digit',
   })}`;
-
-  const editorPlaceholders: PlaceholderDef[] = document.template?.placeholders?.length
-    ? document.template.placeholders
-    : Object.keys(fieldValues).map((key) => ({
-        key,
-        label: key,
-        type: 'text',
-        required: false,
-      }));
 
   const placeholderForm = (
     <PlaceholderForm
@@ -272,6 +284,7 @@ export const DocumentEditorPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setOnlyofficeOpen((value) => !value)}
+              title="Sửa toàn bộ nội dung, bao gồm các điều khoản"
               className="btn btn-secondary"
             >
               <Pencil className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />

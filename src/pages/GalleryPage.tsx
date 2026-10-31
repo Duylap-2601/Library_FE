@@ -22,6 +22,7 @@ export const GalleryPage: React.FC = () => {
 
   const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(null);
 
   const {
     data: templateResponse,
@@ -40,6 +41,7 @@ export const GalleryPage: React.FC = () => {
 
   const handleUseTemplate = async (template: Template) => {
     setCreateError(null);
+    setCreatingTemplateId(template.id);
     try {
       const defaultTitle = `${template.name} - ${new Date().toLocaleDateString('vi-VN')}`;
       const newDoc = await createDocMutation.mutateAsync({
@@ -51,6 +53,8 @@ export const GalleryPage: React.FC = () => {
       setCreateError(
         err instanceof Error ? err.message : 'Không thể tạo tài liệu từ mẫu',
       );
+    } finally {
+      setCreatingTemplateId(null);
     }
   };
 
@@ -146,7 +150,7 @@ export const GalleryPage: React.FC = () => {
                 template={template}
                 onPreview={(item) => setPreviewTemplate(item)}
                 onUse={handleUseTemplate}
-                isCreating={createDocMutation.isPending}
+                isCreating={creatingTemplateId === template.id}
               />
             ))}
           </div>
@@ -194,7 +198,7 @@ export const GalleryPage: React.FC = () => {
           setPreviewTemplate(null);
           handleUseTemplate(template);
         }}
-        isCreating={createDocMutation.isPending}
+        isCreating={creatingTemplateId === previewTemplate?.id}
       />
     </div>
   );

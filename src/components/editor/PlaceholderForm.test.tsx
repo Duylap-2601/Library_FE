@@ -34,6 +34,35 @@ describe('PlaceholderForm', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it('formats currency values while typing', () => {
+    const onChange = vi.fn();
+
+    render(
+      <PlaceholderForm
+        placeholders={[
+          {
+            key: 'amount',
+            label: 'Giá trị hợp đồng',
+            type: 'currency',
+            required: true,
+            suffix: 'VNĐ',
+          },
+        ]}
+        values={{ amount: '180000000 VND' }}
+        onChange={onChange}
+        onSubmit={vi.fn()}
+      />,
+    );
+
+    const input = screen.getByLabelText('Giá trị hợp đồng') as HTMLInputElement;
+    expect(input.value).toBe('180.000.000');
+    expect(input.inputMode).toBe('numeric');
+    expect(screen.getByText('VNĐ')).toBeInTheDocument();
+
+    fireEvent.change(input, { target: { value: '250000000' } });
+    expect(onChange).toHaveBeenCalledWith('amount', '250.000.000');
+  });
+
   it('shows the empty message when there are no placeholders', () => {
     render(
       <PlaceholderForm

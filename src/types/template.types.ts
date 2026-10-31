@@ -6,6 +6,7 @@ export interface PlaceholderDef {
   type: string;
   default?: string | number | boolean;
   required: boolean;
+  suffix?: string;
 }
 
 export interface TemplateSlide {

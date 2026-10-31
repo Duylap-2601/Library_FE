@@ -1,6 +1,11 @@
 import React from 'react';
 import type { PlaceholderDef } from '../../types/template.types';
 import { Loader2, Save } from 'lucide-react';
+import {
+  formatNumericInput,
+  isCurrencyField,
+  isNumericField,
+} from '../../utils/numberFormat';
 
 interface PlaceholderFormProps {
   placeholders: PlaceholderDef[];
@@ -43,6 +48,9 @@ export const PlaceholderForm: React.FC<PlaceholderFormProps> = ({
               field.key.includes('progress') ||
               field.key.includes('plan') ||
               field.key.includes('conclusion');
+            const numeric = isNumericField(field);
+            const currency = isCurrencyField(field);
+            const displayValue = numeric ? formatNumericInput(value) : value;
 
             return (
               <div key={field.key}>
@@ -66,15 +74,30 @@ export const PlaceholderForm: React.FC<PlaceholderFormProps> = ({
                     className="field h-auto min-h-[76px] resize-y py-2"
                   />
                 ) : (
-                  <input
-                    type={field.type === 'date' ? 'date' : 'text'}
-                    id={field.key}
-                    value={value}
-                    onChange={(event) => onChange(field.key, event.target.value)}
-                    required={field.required}
-                    placeholder={`Nhập ${(field.label || field.key).toLowerCase()}…`}
-                    className="field"
-                  />
+                  <div className={currency ? 'relative' : undefined}>
+                    <input
+                      type={field.type === 'date' ? 'date' : 'text'}
+                      inputMode={numeric ? 'numeric' : undefined}
+                      id={field.key}
+                      value={displayValue}
+                      onChange={(event) =>
+                        onChange(
+                          field.key,
+                          numeric
+                            ? formatNumericInput(event.target.value)
+                            : event.target.value,
+                        )
+                      }
+                      required={field.required}
+                      placeholder={`Nhập ${(field.label || field.key).toLowerCase()}…`}
+                      className={currency ? 'field pr-14' : 'field'}
+                    />
+                    {currency && (
+                      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-muted">
+                        {field.suffix || 'VNĐ'}
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
             );
