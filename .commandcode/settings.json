@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(node --version)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/draw.mjs\" --app --list kinds)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/draw.mjs\" --app --kind workspace --brief \"A document template library: browse DOCX/PPTX templates, fill placeholders, generate and download office documents\" --screens list,detail,builder --options 3)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/draw.mjs\" --app --list screens)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/draw.mjs\" --app --kind creator --brief \"A document template library: browse DOCX/PPTX templates, fill placeholders, generate and download office documents\" --screens list,detail,builder --options 3)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/draw.mjs\" --app --kind smb-admin --brief \"A document template library: browse DOCX/PPTX templates, fill placeholders, generate and download office documents\" --screens list,detail,builder --options 3)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/draw.mjs\" --app --kind smb-admin --brief \"A document template library: browse DOCX/PPTX templates, fill placeholders, generate and download office documents\" --screens list,detail,builder --style framed-sheet)",
+      "Shell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/api/v1/templates?limit=2\" -UseBasicParsing -TimeoutSec 5; Write-Output \"STATUS $($r.StatusCode)\"; Write-Output $r.Content.Substring(0, [Math]::Min(600, $r.Content.Length)) } catch { Write-Output \"DOWN: $($_.Exception.Message)\" })",
+      "powershell",
+      "Shell(npm:*)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/lint.mjs\" --app src)",
+      "Shell(node \"C:\\Users\\Lenovo\\AppData\\Local\\Temp\\commandcode\\D--PRM-Library-Library-FE\\70622ff0-b587-4e4d-bbd3-582ae56329f9\\scratchpad\\mock-api.mjs\")",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/inspect.mjs\" --app http://localhost:5173)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/inspect.mjs\" --app http://localhost:5173/documents)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/inspect.mjs\" --app http://localhost:5173/documents/doc-01)",
+      "Shell(powershell -NoProfile -Command \"$p='src/index.css'; $c=Get-Content -Raw $p; $i=$c.IndexOf('/* Rendered DOCX preview'); if ($i -ge 0) { $c.Substring(0,$i).TrimEnd() + \\\"`n\\\" | Set-Content -NoNewline $p }; (Get-Content $p | Measure-Object -Line).Lines\")",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/inspect.mjs\" --app http://localhost:4173 --out .taste-skill/final-gallery)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/inspect.mjs\" --app http://localhost:4173/documents --out .taste-skill/final-documents)",
+      "Shell(node \".agents/skills/design-taste-frontend/scripts/inspect.mjs\" --app http://localhost:4173/documents/doc-01 --out .taste-skill/final-editor)",
+      "Shell(agent-browser:*)",
+      "Shell(node \"C:\\Users\\Lenovo\\AppData\\Local\\Temp\\commandcode\\D--PRM-Library-Library-FE\\70622ff0-b587-4e4d-bbd3-582ae56329f9\\scratchpad\\check-ui.mjs\")",
+      "Shell(node \"C:\\Users\\Lenovo\\AppData\\Local\\Temp\\commandcode\\D--PRM-Library-Library-FE\\70622ff0-b587-4e4d-bbd3-582ae56329f9\\scratchpad\\check-modal.mjs\")"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}
